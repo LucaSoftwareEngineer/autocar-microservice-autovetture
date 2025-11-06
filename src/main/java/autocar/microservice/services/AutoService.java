@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.Collections;
+import java.util.List;
 
 
 @Service
@@ -23,20 +24,24 @@ public class AutoService {
     private final AutoRepository autoRepository;
     private final RestTemplate restTemplate;
 
-    public Auto registraAuto(String token, RegistraAutoRequest request) throws TokenIsNotValid {
+    public Boolean checkToken(String token) {
         HttpHeaders headers = new HttpHeaders();
         headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
         headers.set("Authorization", token);
         HttpEntity<Void> entity = new HttpEntity<>(headers);
 
         ResponseEntity<TokenCheckResponse> response = restTemplate.exchange(
-            tockenCheck,
-            HttpMethod.POST,
-            entity,
-            TokenCheckResponse.class
+                tockenCheck,
+                HttpMethod.POST,
+                entity,
+                TokenCheckResponse.class
         );
 
-        if (response.getBody().isValido()) {
+        return response.getBody().isValido();
+    }
+
+    public Auto registraAuto(String token, RegistraAutoRequest request) throws TokenIsNotValid {
+        if (this.checkToken(token)) {
             Auto auto = new Auto();
             auto.setMarca(request.getMarca());
             auto.setModello(request.getModello());
@@ -44,6 +49,14 @@ public class AutoService {
             auto.setNumeroRuote(request.getNumeroRuote());
             auto.setCavalli(request.getCavalli());
             return autoRepository.save(auto);
+        } else {
+            throw new TokenIsNotValid();
+        }
+    }
+
+    public List<Auto> getElencoAuto(String token) throws TokenIsNotValid {
+        if (this.checkToken(token)) {
+            return autoRepository.findAll();
         } else {
             throw new TokenIsNotValid();
         }

@@ -8,6 +8,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequiredArgsConstructor
 @CrossOrigin(origins = "*")
@@ -23,6 +25,17 @@ public class AutoController {
     ) {
         try {
             return ResponseEntity.ok(autoService.registraAuto(token, request));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
+    @GetMapping("elenco")
+    public ResponseEntity<List<Auto>> getElencoAuto(
+        @RequestHeader(name = "Authorization") String token
+    ) {
+        try {
+            return ResponseEntity.ok(autoService.getElencoAuto(token));
         } catch (Exception e) {
             return ResponseEntity.badRequest().build();
         }
