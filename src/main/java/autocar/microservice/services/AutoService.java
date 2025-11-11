@@ -1,5 +1,6 @@
 package autocar.microservice.services;
 
+import autocar.microservice.dto.AutoReportResponse;
 import autocar.microservice.dto.RegistraAutoRequest;
 import autocar.microservice.dto.TokenCheckResponse;
 import autocar.microservice.exceptions.TokenIsNotValid;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 
 
@@ -57,6 +59,33 @@ public class AutoService {
     public List<Auto> getElencoAuto(String token) throws TokenIsNotValid {
         if (this.checkToken(token)) {
             return autoRepository.findAll();
+        } else {
+            throw new TokenIsNotValid();
+        }
+    }
+
+    public AutoReportResponse getReportAuto(String token) throws TokenIsNotValid {
+        if (this.checkToken(token)) {
+            List<Auto> elencoAuto = autoRepository.findAll();
+
+            int numeroAutoConTarga = 0;
+            int numeroAutoSenzaTarga = 0;
+
+            Iterator iterator = elencoAuto.listIterator();
+            while (iterator.hasNext()) {
+                Auto auto = (Auto) iterator.next();
+                if (auto.getTarga() != null)
+                    numeroAutoConTarga++;
+                numeroAutoSenzaTarga++;
+            }
+
+            AutoReportResponse res = new AutoReportResponse();
+            res.setAutoConTarga(numeroAutoConTarga);
+            res.setAutoSenzaTarga(numeroAutoSenzaTarga);
+            res.setAutoComplessive(elencoAuto.size());
+
+            return res;
+
         } else {
             throw new TokenIsNotValid();
         }

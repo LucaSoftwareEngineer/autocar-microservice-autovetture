@@ -1,6 +1,8 @@
 package autocar.microservice.controllers;
 
+import autocar.microservice.dto.AutoReportResponse;
 import autocar.microservice.dto.RegistraAutoRequest;
+import autocar.microservice.exceptions.TokenIsNotValid;
 import autocar.microservice.models.Auto;
 import autocar.microservice.services.AutoService;
 import lombok.RequiredArgsConstructor;
@@ -37,6 +39,17 @@ public class AutoController {
         try {
             return ResponseEntity.ok(autoService.getElencoAuto(token));
         } catch (Exception e) {
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
+    @GetMapping("report")
+    public ResponseEntity<AutoReportResponse> getReportAuto(
+        @RequestHeader(name = "Authorization") String token
+    ) {
+        try {
+            return ResponseEntity.ok(autoService.getReportAuto(token));
+        } catch (TokenIsNotValid e) {
             return ResponseEntity.badRequest().build();
         }
     }
