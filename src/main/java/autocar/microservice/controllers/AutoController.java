@@ -1,6 +1,8 @@
 package autocar.microservice.controllers;
 
 import autocar.microservice.dto.AutoReportResponse;
+import autocar.microservice.dto.ImpostaTargaRequest;
+import autocar.microservice.dto.ImpostaTargaResponse;
 import autocar.microservice.dto.RegistraAutoRequest;
 import autocar.microservice.exceptions.TokenIsNotValid;
 import autocar.microservice.models.Auto;
@@ -50,6 +52,18 @@ public class AutoController {
         try {
             return ResponseEntity.ok(autoService.getReportAuto(token));
         } catch (TokenIsNotValid e) {
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
+    @PostMapping("imposta/targa")
+    public ResponseEntity<ImpostaTargaResponse> impostaTarga(
+        @RequestHeader(name = "Authorization") String token,
+        @RequestBody ImpostaTargaRequest request
+    ) {
+        try {
+            return ResponseEntity.ok(autoService.impostaTarga(token, request));
+        } catch (Exception e) {
             return ResponseEntity.badRequest().build();
         }
     }

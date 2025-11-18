@@ -1,8 +1,6 @@
 package autocar.microservice.services;
 
-import autocar.microservice.dto.AutoReportResponse;
-import autocar.microservice.dto.RegistraAutoRequest;
-import autocar.microservice.dto.TokenCheckResponse;
+import autocar.microservice.dto.*;
 import autocar.microservice.exceptions.TokenIsNotValid;
 import autocar.microservice.models.Auto;
 import autocar.microservice.repositories.AutoRepository;
@@ -12,6 +10,7 @@ import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import javax.naming.AuthenticationException;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
@@ -86,6 +85,21 @@ public class AutoService {
 
             return res;
 
+        } else {
+            throw new TokenIsNotValid();
+        }
+    }
+
+    public ImpostaTargaResponse impostaTarga(String token, ImpostaTargaRequest req) throws AuthenticationException, TokenIsNotValid {
+        if (this.checkToken(token)) {
+            Auto auto = autoRepository.findById(req.getIdAuto()).get();
+            if (auto == null)
+                throw new AuthenticationException();
+            auto.setTarga(req.getTarga());
+            autoRepository.save(auto);
+            ImpostaTargaResponse res = new ImpostaTargaResponse();
+            res.setIdAuto(auto.getId());
+            return res;
         } else {
             throw new TokenIsNotValid();
         }
