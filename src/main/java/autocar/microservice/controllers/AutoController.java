@@ -1,9 +1,6 @@
 package autocar.microservice.controllers;
 
-import autocar.microservice.dto.AutoReportResponse;
-import autocar.microservice.dto.ImpostaTargaRequest;
-import autocar.microservice.dto.ImpostaTargaResponse;
-import autocar.microservice.dto.RegistraAutoRequest;
+import autocar.microservice.dto.*;
 import autocar.microservice.exceptions.TokenIsNotValid;
 import autocar.microservice.models.Auto;
 import autocar.microservice.services.AutoService;
@@ -66,6 +63,17 @@ public class AutoController {
         } catch (Exception e) {
             return ResponseEntity.badRequest().build();
         }
+    }
+
+    @DeleteMapping("elimina")
+    public ResponseEntity<AutoDeleteResponse> eliminaAuto(
+        @RequestHeader(name = "Authorization") String token,
+        @RequestParam Long id
+    ) throws TokenIsNotValid {
+        if (autoService.eliminaAuto(token, id))
+            return ResponseEntity.ok(new AutoDeleteResponse(true));
+        else
+            return ResponseEntity.badRequest().build();
     }
 
 }

@@ -105,4 +105,16 @@ public class AutoService {
         }
     }
 
+    public boolean eliminaAuto(String token, Long id) throws TokenIsNotValid {
+        if (this.checkToken(token)) {
+            try {
+                autoRepository.deleteById(id);
+                return true;
+            } catch (Exception e) {
+                return false;
+            }
+        }
+        throw new TokenIsNotValid();
+    }
+
 }
