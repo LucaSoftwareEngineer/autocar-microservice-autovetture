@@ -75,7 +75,8 @@ public class AutoService {
                 Auto auto = (Auto) iterator.next();
                 if (auto.getTarga() != null)
                     numeroAutoConTarga++;
-                numeroAutoSenzaTarga++;
+                else
+                    numeroAutoSenzaTarga++;
             }
 
             AutoReportResponse res = new AutoReportResponse();
