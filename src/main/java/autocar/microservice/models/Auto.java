@@ -35,4 +35,7 @@ public class Auto {
     @Column(name = "auto_cavalli")
     private Integer cavalli;
 
+    @Column(name = "auto_venduta", insertable = false)
+    private Boolean venduta;
+
 }
