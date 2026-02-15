@@ -24,7 +24,6 @@ import java.util.List;
 public class AutoService {
 
     private final AutoRepository autoRepository;
-    private final RestTemplate restTemplate;
 
     @Autowired
     private final AutocarMicroserviceAuthClient authClient;
