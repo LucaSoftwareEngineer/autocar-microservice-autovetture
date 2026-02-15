@@ -1,10 +1,13 @@
 package autocar.microservice.services;
 
+import autocar.microservice.client.AutocarMicroserviceAuthClient;
 import autocar.microservice.dto.*;
 import autocar.microservice.exceptions.TokenIsNotValid;
 import autocar.microservice.models.Auto;
 import autocar.microservice.repositories.AutoRepository;
 import lombok.RequiredArgsConstructor;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
@@ -20,24 +23,14 @@ import java.util.List;
 @RequiredArgsConstructor
 public class AutoService {
 
-    @Value("${autocar.microservice.auth.token.check}")
-    private String tockenCheck;
     private final AutoRepository autoRepository;
     private final RestTemplate restTemplate;
 
+    @Autowired
+    private final AutocarMicroserviceAuthClient authClient;
+    
     public Boolean checkToken(String token) {
-        HttpHeaders headers = new HttpHeaders();
-        headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
-        headers.set("Authorization", token);
-        HttpEntity<Void> entity = new HttpEntity<>(headers);
-
-        ResponseEntity<TokenCheckResponse> response = restTemplate.exchange(
-                tockenCheck,
-                HttpMethod.POST,
-                entity,
-                TokenCheckResponse.class
-        );
-
+    	ResponseEntity<TokenCheckResponse> response = authClient.tokenCheck(token);
         return response.getBody().isValido();
     }
 

@@ -63,6 +63,13 @@
 			<groupId>org.springframework.cloud</groupId>
 			<artifactId>spring-cloud-starter-openfeign</artifactId>
 		</dependency>
+		<!-- Source: https://mvnrepository.com/artifact/org.springframework.cloud/spring-cloud-starter-loadbalancer -->
+		<dependency>
+		    <groupId>org.springframework.cloud</groupId>
+		    <artifactId>spring-cloud-starter-loadbalancer</artifactId>
+		    <version>4.2.3</version>
+		    <scope>compile</scope>
+		</dependency>
 	</dependencies>
 
 	<build>
